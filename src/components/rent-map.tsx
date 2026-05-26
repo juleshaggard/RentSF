@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { DivIcon, Map as LeafletMap, Marker as LeafletMarker } from "leaflet";
 import type { ListingDTO } from "@/lib/types";
 
@@ -16,6 +16,7 @@ export function ListingMap({ listings, selectedId, hoveredId, onSelect }: Listin
   const mapRef = useRef<LeafletMap | null>(null);
   const markersRef = useRef<Map<string, LeafletMarker>>(new Map());
   const hasFitBoundsRef = useRef(false);
+  const [mapReady, setMapReady] = useState(false);
   const mappableListings = useMemo(
     () => listings.filter((listing) => typeof listing.lat === "number" && typeof listing.lng === "number"),
     [listings]
@@ -47,6 +48,8 @@ export function ListingMap({ listings, selectedId, hoveredId, onSelect }: Listin
       }).addTo(map);
       L.control.zoom({ position: "bottomright" }).addTo(map);
       mapRef.current = map;
+      setMapReady(true);
+      window.requestAnimationFrame(() => map.invalidateSize());
     }
 
     void loadMap();
@@ -57,15 +60,45 @@ export function ListingMap({ listings, selectedId, hoveredId, onSelect }: Listin
       markers.clear();
       mapRef.current?.remove();
       mapRef.current = null;
+      setMapReady(false);
     };
   }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || !mapReady) return;
+    let cancelled = false;
+
+    const observer = new ResizeObserver(() => {
+      const map = mapRef.current;
+      if (!map) return;
+      window.requestAnimationFrame(() => map.invalidateSize({ animate: false }));
+
+      if (!hasFitBoundsRef.current && hasVisibleSize(container) && mappableListings.length) {
+        void import("leaflet").then((L) => {
+          if (cancelled) return;
+          const bounds = L.latLngBounds(mappableListings.map((listing) => [listing.lat as number, listing.lng as number]));
+          if (bounds.isValid()) {
+            map.fitBounds(bounds, { padding: [70, 70], maxZoom: 14, animate: false });
+            hasFitBoundsRef.current = true;
+          }
+        });
+      }
+    });
+
+    observer.observe(container);
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+    };
+  }, [mapReady, mappableKey, mappableListings]);
 
   useEffect(() => {
     let cancelled = false;
 
     async function renderMarkers() {
       const map = mapRef.current;
-      if (!map) return;
+      if (!map || !mapReady) return;
       const L = await import("leaflet");
       if (cancelled) return;
 
@@ -83,7 +116,7 @@ export function ListingMap({ listings, selectedId, hoveredId, onSelect }: Listin
       });
 
       const bounds = L.latLngBounds(mappableListings.map((listing) => [listing.lat as number, listing.lng as number]));
-      if (!hasFitBoundsRef.current && bounds.isValid()) {
+      if (!hasFitBoundsRef.current && bounds.isValid() && hasVisibleSize(containerRef.current)) {
         map.fitBounds(bounds, { padding: [70, 70], maxZoom: 14, animate: true, duration: 0.6 });
         hasFitBoundsRef.current = true;
       }
@@ -93,7 +126,7 @@ export function ListingMap({ listings, selectedId, hoveredId, onSelect }: Listin
     return () => {
       cancelled = true;
     };
-  }, [mappableKey, mappableListings, onSelect]);
+  }, [mapReady, mappableKey, mappableListings, onSelect]);
 
   useEffect(() => {
     markersRef.current.forEach((marker, id) => {
@@ -136,4 +169,8 @@ function compactPrice(value: number) {
     return `${Math.round(value / 100) / 10}k`;
   }
   return value.toLocaleString();
+}
+
+function hasVisibleSize(element: HTMLElement | null) {
+  return Boolean(element && element.clientWidth > 0 && element.clientHeight > 0);
 }
