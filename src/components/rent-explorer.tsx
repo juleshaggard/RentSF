@@ -459,27 +459,31 @@ function ListingDetailDrawer({ listing, onClose }: { listing: ListingDTO; onClos
               </div>
             )}
             {listing.isNew ? (
-              <span className="absolute left-4 top-4 rounded-full bg-coral px-3 py-1.5 text-xs font-bold text-paper">New</span>
+              <span className="pointer-events-none absolute left-4 top-4 z-20 rounded-full bg-coral px-3 py-1.5 text-xs font-bold text-paper">New</span>
             ) : null}
             {images.length > 1 ? (
               <>
                 <button
-                  className="absolute left-4 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full bg-paper/95 text-ink shadow-airbnb transition active:scale-[0.96]"
+                  className="group absolute inset-y-0 left-0 z-10 w-1/2 bg-transparent outline-none"
                   type="button"
                   onClick={() => moveImage(-1)}
                   aria-label="Previous image"
                 >
-                  <ChevronLeft size={18} />
+                  <span className="absolute left-4 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full bg-paper/95 text-ink shadow-airbnb transition group-active:scale-[0.96] group-focus-visible:ring-2 group-focus-visible:ring-ink/30">
+                    <ChevronLeft size={18} />
+                  </span>
                 </button>
                 <button
-                  className="absolute right-4 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full bg-paper/95 text-ink shadow-airbnb transition active:scale-[0.96]"
+                  className="group absolute inset-y-0 right-0 z-10 w-1/2 bg-transparent outline-none"
                   type="button"
                   onClick={() => moveImage(1)}
                   aria-label="Next image"
                 >
-                  <ChevronRight size={18} />
+                  <span className="absolute right-4 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full bg-paper/95 text-ink shadow-airbnb transition group-active:scale-[0.96] group-focus-visible:ring-2 group-focus-visible:ring-ink/30">
+                    <ChevronRight size={18} />
+                  </span>
                 </button>
-                <span className="absolute bottom-4 right-4 rounded-full bg-ink/80 px-3 py-1.5 text-xs font-bold text-paper">
+                <span className="pointer-events-none absolute bottom-4 right-4 z-20 rounded-full bg-ink/80 px-3 py-1.5 text-xs font-bold text-paper">
                   {imageIndex + 1} / {images.length}
                 </span>
               </>
