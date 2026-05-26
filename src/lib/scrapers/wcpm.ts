@@ -17,8 +17,7 @@ import {
   unique
 } from "./utils";
 
-const SOURCE_URL =
-  "https://wcpm.appfolio.com/listings/listings?filters%5Bbedrooms%5D=1&filters%5Bcity%5D=San+Francisco";
+const SOURCE_URL = "https://wcpm.appfolio.com/listings/listings?filters%5Bcity%5D=San+Francisco";
 const BASE_URL = "https://wcpm.appfolio.com";
 const CONTACT_EMAIL = "info@wcpm.com";
 

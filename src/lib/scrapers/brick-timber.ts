@@ -51,10 +51,11 @@ export function parseBrickTimberListings(data: BrickResponse): RawListing[] {
   const properties = new Map(data.properties.map((property) => [property.propertyId, property]));
 
   return data.apartments
-    .filter((apartment) => apartment.beds === "1")
     .map((apartment) => {
       const property = properties.get(apartment.propertyId);
       const images = safeImages(apartment.apartmentImages);
+      const bedrooms = Number(apartment.beds);
+      const bathrooms = Number(apartment.baths);
       const address = property
         ? `${property.address}${apartment.apartmentName ? ` #${apartment.apartmentName}` : ""}, ${property.city}, ${property.state} ${property.zipcode}`
         : apartment.propertyName;
@@ -68,8 +69,8 @@ export function parseBrickTimberListings(data: BrickResponse): RawListing[] {
         city: property?.city ?? null,
         neighborhood: property?.neighborhood ?? null,
         rent: parseMoney(apartment.minrent),
-        bedrooms: Number(apartment.beds),
-        bathrooms: Number(apartment.baths),
+        bedrooms: Number.isFinite(bedrooms) ? bedrooms : null,
+        bathrooms: Number.isFinite(bathrooms) ? bathrooms : null,
         sqft: apartment.sqft ? Number(apartment.sqft) : null,
         url: brickTimberSource.url,
         applyUrl: apartment.applyOnlineURL ?? null,

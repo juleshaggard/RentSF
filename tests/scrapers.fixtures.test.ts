@@ -86,8 +86,9 @@ describe("scraper fixture parsers", () => {
       ]
     });
 
-    expect(listings).toHaveLength(1);
+    expect(listings).toHaveLength(2);
     expect(listings[0]).toMatchObject({ externalId: "apt4", bedrooms: 1, neighborhood: "Lower Haight" });
+    expect(listings[1]).toMatchObject({ externalId: "apt5", bedrooms: 2, neighborhood: "Lower Haight" });
   });
 
   it("parses WCPM AppFolio cards and marker data", () => {

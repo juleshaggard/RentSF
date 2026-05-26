@@ -11,8 +11,6 @@ import {
   Cat,
   ChevronLeft,
   ChevronRight,
-  Check,
-  Copy,
   ExternalLink,
   Home,
   Mail,
@@ -30,6 +28,7 @@ import { getPetPolicy } from "@/lib/pet-policy";
 import { ListingMap } from "./rent-map";
 
 type SortKey = "newest" | "price-asc" | "price-desc";
+type BedroomFilter = "any" | "studio" | "1" | "2" | "3plus" | "unknown";
 
 const STATIC_EXPORT = process.env.NEXT_PUBLIC_STATIC_EXPORT === "1";
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -44,6 +43,7 @@ export function RentExplorer() {
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [maxRent, setMaxRent] = useState("");
+  const [bedroomFilter, setBedroomFilter] = useState<BedroomFilter>("any");
   const [sort, setSort] = useState<SortKey>("newest");
   const [animalsOnly, setAnimalsOnly] = useState(false);
   const [catsOnly, setCatsOnly] = useState(false);
@@ -86,10 +86,11 @@ export function RentExplorer() {
           .toLowerCase()
           .includes(normalizedQuery);
       const matchesRent = rentCap === null || !listing.rent || listing.rent <= rentCap;
+      const matchesBedrooms = matchesBedroomFilter(listing, bedroomFilter);
       const petPolicy = getPetPolicy(listing);
       const matchesAnimals = !animalsOnly || petPolicy.allowsAnimals;
       const matchesCats = !catsOnly || petPolicy.allowsCats;
-      return matchesQuery && matchesRent && matchesAnimals && matchesCats;
+      return matchesQuery && matchesRent && matchesBedrooms && matchesAnimals && matchesCats;
     });
 
     next.sort((a, b) => {
@@ -99,7 +100,7 @@ export function RentExplorer() {
     });
 
     return next;
-  }, [animalsOnly, catsOnly, listings, maxRent, query, sort]);
+  }, [animalsOnly, bedroomFilter, catsOnly, listings, maxRent, query, sort]);
 
   const selected = filtered.find((listing) => listing.id === selectedId) ?? filtered[0] ?? null;
   const detailListing = listings.find((listing) => listing.id === detailId) ?? null;
@@ -124,7 +125,7 @@ export function RentExplorer() {
                 <h1 className="text-2xl font-semibold tracking-normal">RentSF</h1>
               </div>
               <p className="mt-1 text-sm text-muted">
-                {filtered.length} active 1-bedroom{filtered.length === 1 ? "" : "s"}
+                {filtered.length} active listing{filtered.length === 1 ? "" : "s"}
                 {averageRent ? ` · average $${averageRent.toLocaleString()}/mo` : ""}
                 {latestRun?.finishedAt ? ` · updated ${formatRelative(latestRun.finishedAt)}` : ""}
               </p>
@@ -172,6 +173,21 @@ export function RentExplorer() {
                 placeholder="Max rent"
                 inputMode="numeric"
               />
+            </label>
+            <label className="relative lg:w-[170px]">
+              <BedDouble className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" size={17} />
+              <select
+                className="h-12 w-full appearance-none rounded-full border border-line bg-white/80 pl-11 pr-4 text-sm outline-none transition focus:border-ink"
+                value={bedroomFilter}
+                onChange={(event) => setBedroomFilter(event.target.value as BedroomFilter)}
+              >
+                <option value="any">Any beds</option>
+                <option value="studio">Studio</option>
+                <option value="1">1 bed</option>
+                <option value="2">2 beds</option>
+                <option value="3plus">3+ beds</option>
+                <option value="unknown">Beds unknown</option>
+              </select>
             </label>
             <label className="relative lg:w-[160px]">
               <ArrowUpDown className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" size={17} />
@@ -254,7 +270,7 @@ export function RentExplorer() {
               <div className="px-8 py-20">
                 <div className="rounded-2xl border border-line bg-white/70 p-8 text-center shadow-airbnb">
                   <MapPin className="mx-auto text-coral" size={28} />
-                  <h2 className="mt-4 text-lg font-semibold">No matching 1-bedrooms</h2>
+                  <h2 className="mt-4 text-lg font-semibold">No matching listings</h2>
                   <p className="mt-2 text-sm text-muted">Try clearing filters or run the scraper after adding environment credentials.</p>
                 </div>
               </div>
@@ -342,7 +358,7 @@ function ListingCard({
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold text-ink">
-            <Fact icon={<BedDouble size={14} />} label="1 bed" />
+            <Fact icon={<BedDouble size={14} />} label={bedroomLabel(listing.bedrooms)} />
             <Fact icon={<Bath size={14} />} label={listing.bathrooms ? `${listing.bathrooms} bath` : "bath n/a"} />
             {listing.sqft ? <Fact icon={<Ruler size={14} />} label={`${listing.sqft.toLocaleString()} sqft`} /> : null}
             {listing.availableDate ? <Fact icon={<Calendar size={14} />} label={formatDate(listing.availableDate)} /> : null}
@@ -396,7 +412,6 @@ function ListingCard({
 
 function ListingDetailDrawer({ listing, onClose }: { listing: ListingDTO; onClose: () => void }) {
   const [imageIndex, setImageIndex] = useState(0);
-  const [copied, setCopied] = useState(false);
   const emailDraft = buildInquiryEmail(listing);
   const petPolicy = getPetPolicy(listing);
   const images = listing.imageUrls;
@@ -404,19 +419,11 @@ function ListingDetailDrawer({ listing, onClose }: { listing: ListingDTO; onClos
 
   useEffect(() => {
     setImageIndex(0);
-    setCopied(false);
   }, [listing.id]);
 
   function moveImage(direction: -1 | 1) {
     if (!images.length) return;
     setImageIndex((current) => (current + direction + images.length) % images.length);
-  }
-
-  async function copyEmailDraft() {
-    if (!emailDraft) return;
-    await copyText(emailDraft.clipboardText);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
   }
 
   return (
@@ -495,7 +502,7 @@ function ListingDetailDrawer({ listing, onClose }: { listing: ListingDTO; onClos
             </div>
 
             <div className="flex flex-wrap gap-2 text-xs font-semibold">
-              <Fact icon={<BedDouble size={14} />} label="1 bed" />
+              <Fact icon={<BedDouble size={14} />} label={bedroomLabel(listing.bedrooms)} />
               <Fact icon={<Bath size={14} />} label={listing.bathrooms ? `${listing.bathrooms} bath` : "bath n/a"} />
               {listing.sqft ? <Fact icon={<Ruler size={14} />} label={`${listing.sqft.toLocaleString()} sqft`} /> : null}
               {listing.availableDate ? <Fact icon={<Calendar size={14} />} label={formatDate(listing.availableDate)} /> : null}
@@ -509,67 +516,25 @@ function ListingDetailDrawer({ listing, onClose }: { listing: ListingDTO; onClos
               <p className="text-sm leading-6 text-muted">No long-form description was published for this listing.</p>
             )}
 
-            <div className="grid gap-2">
+            <div className={clsx("grid gap-2", emailDraft ? "grid-cols-2" : "grid-cols-1")}>
               {emailDraft ? (
-                <div className="rounded-2xl border border-line bg-white p-3">
-                  <div className="mb-2 truncate px-1 text-xs font-semibold text-muted">To {emailDraft.to}</div>
-                  <button
-                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-paper transition active:scale-[0.98]"
-                    type="button"
-                    onClick={() => void copyEmailDraft()}
-                  >
-                    {copied ? <Check size={16} /> : <Copy size={16} />}
-                    {copied ? "Copied draft" : "Copy email draft"}
-                  </button>
-                  <div className="mt-2 grid grid-cols-2 gap-2">
-                    <a
-                      className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-line bg-paper px-4 text-sm font-semibold transition active:scale-[0.98]"
-                      href={emailDraft.mailto}
-                    >
-                      <Mail size={15} />
-                      Mail app
-                    </a>
-                    <a
-                      className="inline-flex h-11 items-center justify-center rounded-full border border-line bg-paper px-4 text-sm font-semibold transition active:scale-[0.98]"
-                      href={emailDraft.gmailUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Gmail
-                    </a>
-                  </div>
-                </div>
-              ) : null}
-              <div className="grid grid-cols-2 gap-2">
                 <a
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-line bg-white px-4 text-sm font-semibold transition active:scale-[0.98]"
-                  href={listing.url}
-                  target="_blank"
-                  rel="noreferrer"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-paper transition active:scale-[0.98]"
+                  href={emailDraft.mailto}
                 >
-                  <ExternalLink size={15} />
-                  View
+                  <Mail size={15} />
+                  Mail
                 </a>
-                {listing.applyUrl ? (
-                  <a
-                    className="inline-flex h-11 items-center justify-center rounded-full border border-line bg-white px-4 text-sm font-semibold transition active:scale-[0.98]"
-                    href={listing.applyUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Apply/Schedule
-                  </a>
-                ) : (
-                  <a
-                    className="inline-flex h-11 items-center justify-center rounded-full border border-line bg-white px-4 text-sm font-semibold transition active:scale-[0.98]"
-                    href={listing.url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Schedule
-                  </a>
-                )}
-              </div>
+              ) : null}
+              <a
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-line bg-white px-5 text-sm font-semibold transition active:scale-[0.98]"
+                href={listing.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <ExternalLink size={15} />
+                View
+              </a>
             </div>
 
             <div className="border-t border-line pt-4 text-xs text-muted">
@@ -645,6 +610,26 @@ function sourceLabel(source: string) {
     .join(" ");
 }
 
+function matchesBedroomFilter(listing: ListingDTO, filter: BedroomFilter) {
+  const bedrooms = listing.bedrooms;
+  if (filter === "any") return true;
+  if (filter === "unknown") return bedrooms === null;
+  if (filter === "studio") return bedrooms === 0;
+  if (filter === "3plus") return bedrooms !== null && bedrooms >= 3;
+  return bedrooms === Number(filter);
+}
+
+function bedroomLabel(value: number | null) {
+  if (value === null) return "Beds n/a";
+  if (value === 0) return "Studio";
+  if (value === 1) return "1 bed";
+  return `${formatBedroomNumber(value)} beds`;
+}
+
+function formatBedroomNumber(value: number) {
+  return Number.isInteger(value) ? value.toString() : value.toFixed(1);
+}
+
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(new Date(value));
 }
@@ -664,21 +649,4 @@ function friendlyError(message?: string) {
     return "Database unavailable. Run npm run db:migrate or update DATABASE_URL, then refresh.";
   }
   return message;
-}
-
-async function copyText(value: string) {
-  if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(value);
-    return;
-  }
-
-  const textarea = document.createElement("textarea");
-  textarea.value = value;
-  textarea.setAttribute("readonly", "true");
-  textarea.style.position = "fixed";
-  textarea.style.opacity = "0";
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand("copy");
-  document.body.removeChild(textarea);
 }

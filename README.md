@@ -1,6 +1,6 @@
 # RentSF
 
-Hourly scraper and Airbnb-style map UI for San Francisco 1-bedroom rentals.
+Hourly scraper and Airbnb-style map UI for San Francisco rentals.
 
 This version runs without Docker, Postgres, or Mapbox:
 

@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "RentSF",
-  description: "Hourly San Francisco 1-bedroom rental scraper and map."
+  description: "Hourly San Francisco rental scraper and map."
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

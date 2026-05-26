@@ -20,27 +20,29 @@ const baseRaw: RawListing = {
 };
 
 describe("listing normalization", () => {
-  it("keeps exact 1-bedroom San Francisco listings", () => {
+  it("keeps San Francisco listings across bedroom counts", () => {
     const listing = normalizeListing(baseRaw);
+    const studio = normalizeListing({ ...baseRaw, externalId: "studio", bedrooms: 0, title: "Studio apartment" });
+    const twoBedroom = normalizeListing({ ...baseRaw, externalId: "two-bed", bedrooms: 2, title: "Two bedroom flat" });
 
     expect(listing?.bedrooms).toBe(1);
+    expect(studio?.bedrooms).toBe(0);
+    expect(twoBedroom?.bedrooms).toBe(2);
     expect(listing?.city).toBe("San Francisco");
     expect(listing?.contentHash).toHaveLength(64);
   });
 
-  it("infers 1-bedroom from clear listing text when structured data is missing", () => {
+  it("infers bedrooms from clear listing text when structured data is missing", () => {
     const listing = normalizeListing({
       ...baseRaw,
       bedrooms: null,
-      description: "Top floor 1 bedroom apartment with hardwood floors."
+      description: "Top floor two bedroom apartment with hardwood floors."
     });
 
-    expect(listing?.bedrooms).toBe(1);
+    expect(listing?.bedrooms).toBe(2);
   });
 
-  it("excludes studios, 2+ bedroom listings, and non-SF listings", () => {
-    expect(normalizeListing({ ...baseRaw, bedrooms: 0, title: "Studio apartment" })).toBeNull();
-    expect(normalizeListing({ ...baseRaw, bedrooms: 2, title: "Two bedroom flat" })).toBeNull();
+  it("excludes non-SF listings", () => {
     expect(
       normalizeListing({
         ...baseRaw,
@@ -73,6 +75,9 @@ describe("field extraction helpers", () => {
   it("parses common bed and bath label formats", () => {
     expect(parseBedrooms("Bed: 1 Bath: 1")).toBe(1);
     expect(parseBedrooms("1BR / 1BA")).toBe(1);
+    expect(parseBedrooms("1-bedroom apartment")).toBe(1);
+    expect(parseBedrooms("Two bedroom flat")).toBe(2);
+    expect(parseBedrooms("three-bedroom flat")).toBe(3);
     expect(parseBedrooms("Studio apartment")).toBe(0);
     expect(parseBathrooms("Baths: 1.5")).toBe(1.5);
   });
@@ -128,15 +133,16 @@ describe("field extraction helpers", () => {
   it("builds useful prefilled contact emails", () => {
     const mailto = buildInquiryMailto({
       contactEmail: "leasing@example.com",
-      title: "Bright 1 Bedroom",
+      title: "Bright 2 Bedroom",
       address: "123 Page St, San Francisco, CA",
+      bedrooms: 2,
       rent: 2995,
       url: "https://example.com/listing-1"
     });
 
     expect(mailto).toContain("mailto:leasing@example.com");
     expect(decodeURIComponent(mailto ?? "")).toContain("Viewing request for 123 Page St, San Francisco, CA");
-    expect(decodeURIComponent(mailto ?? "")).toContain("Hi,\n\nI'm interested in the 1-bedroom at 123 Page St, San Francisco, CA");
+    expect(decodeURIComponent(mailto ?? "")).toContain("Hi,\n\nI'm interested in the 2-bedroom at 123 Page St, San Francisco, CA");
     expect(decodeURIComponent(mailto ?? "")).toContain("Full address: 123 Page St, San Francisco, CA");
     expect(decodeURIComponent(mailto ?? "")).toContain("earliest showing time");
     expect(decodeURIComponent(mailto ?? "")).toContain("Rent: $2,995/mo");

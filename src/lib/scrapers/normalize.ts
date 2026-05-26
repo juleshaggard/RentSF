@@ -21,10 +21,6 @@ export function normalizeListing(raw: RawListing): NormalizedListing | null {
   }
 
   const bedrooms = raw.bedrooms ?? parseBedrooms(textCorpus);
-  if (bedrooms !== 1) {
-    return null;
-  }
-
   const bathrooms = raw.bathrooms ?? parseBathrooms(textCorpus);
   const sqft = raw.sqft ?? parseSqft(textCorpus);
   const imageUrls = unique(raw.imageUrls ?? []);

@@ -11,16 +11,18 @@ export function buildInquiryEmail(listing: {
   contactEmail: string | null;
   title: string;
   address: string;
+  bedrooms?: number | null;
   rent: number | null;
   url: string;
 }): InquiryEmail | null {
   if (!listing.contactEmail) return null;
   const address = listing.address || listing.title;
+  const target = bedroomPhrase(listing.bedrooms);
   const subject = `Viewing request for ${address}`;
   const body = [
     "Hi,",
     "",
-    `I'm interested in the 1-bedroom at ${address}. It looks like it could be a good fit, and I'd love to come see it if it's still available.`,
+    `I'm interested in ${target ? `the ${target} at ${address}` : `the listing at ${address}`}. It looks like it could be a good fit, and I'd love to come see it if it's still available.`,
     "",
     `Listing: ${listing.title}`,
     listing.address ? `Full address: ${listing.address}` : null,
@@ -44,4 +46,11 @@ export function buildInquiryEmail(listing: {
 
 export function buildInquiryMailto(listing: Parameters<typeof buildInquiryEmail>[0]) {
   return buildInquiryEmail(listing)?.mailto ?? null;
+}
+
+function bedroomPhrase(value: number | null | undefined) {
+  if (value === null || value === undefined) return null;
+  if (value === 0) return "studio";
+  if (value === 1) return "1-bedroom";
+  return `${Number.isInteger(value) ? value : value.toFixed(1)}-bedroom`;
 }

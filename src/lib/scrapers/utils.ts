@@ -47,13 +47,30 @@ export function parseBedrooms(value: string | null | undefined): number | null {
   const text = cleanText(value).toLowerCase();
   if (!text) return null;
   if (/\bstudio\b/.test(text)) return 0;
-  if (/\bone\s+(?:bed|bedroom|br)\b/.test(text)) return 1;
+
+  const wordMatch = text.match(/\b(one|two|three|four|five|six|seven|eight|nine|ten)[-\s]+(?:bd|bed|beds|br|bedroom|bedrooms)\b/);
+  if (wordMatch?.[1]) {
+    return BEDROOM_WORDS[wordMatch[1]] ?? null;
+  }
 
   const match =
-    text.match(/\b([0-9]+(?:\.[0-9]+)?)\s*\+?\s*(?:bd|bed|beds|br|bedroom|bedrooms)\b/) ??
+    text.match(/\b([0-9]+(?:\.[0-9]+)?)\s*\+?[-\s]*(?:bd|bed|beds|br|bedroom|bedrooms)\b/) ??
     text.match(/\b(?:bd|bed|beds|br|bedroom|bedrooms)\s*:?\s*([0-9]+(?:\.[0-9]+)?)/);
   return match ? Number(match[1]) : null;
 }
+
+const BEDROOM_WORDS: Record<string, number> = {
+  one: 1,
+  two: 2,
+  three: 3,
+  four: 4,
+  five: 5,
+  six: 6,
+  seven: 7,
+  eight: 8,
+  nine: 9,
+  ten: 10
+};
 
 export function parseBathrooms(value: string | null | undefined): number | null {
   const text = cleanText(value).toLowerCase();
