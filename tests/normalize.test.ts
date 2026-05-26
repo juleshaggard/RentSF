@@ -59,6 +59,31 @@ describe("listing normalization", () => {
         city: "Oakland"
       })
     ).toBeNull();
+    expect(
+      normalizeListing({
+        ...baseRaw,
+        title: "Ground Floor Retail Space on Grand Ave, South San Francisco",
+        address: "Grand Ave, South San Francisco, CA",
+        city: "South San Francisco"
+      })
+    ).toBeNull();
+  });
+
+  it("excludes commercial listings from broad source pages", () => {
+    expect(
+      normalizeListing({
+        ...baseRaw,
+        title: "Great Commercial Space on Market",
+        bedrooms: null
+      })
+    ).toBeNull();
+    expect(
+      normalizeListing({
+        ...baseRaw,
+        title: "2 Bedroom with Home Office",
+        bedrooms: 2
+      })?.bedrooms
+    ).toBe(2);
   });
 
   it("uses stable content hashes for unchanged listing content", () => {

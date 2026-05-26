@@ -16,7 +16,7 @@ export function normalizeListing(raw: RawListing): NormalizedListing | null {
   const address = normalizeAddress(raw.address, neighborhood);
   const textCorpus = [title, address, neighborhood, city, description].filter(Boolean).join(" ");
 
-  if (!title || !raw.externalId || !isSanFrancisco(city, address, raw.url)) {
+  if (!title || !raw.externalId || !isSanFrancisco(city, address, raw.url) || isCommercialListing(title)) {
     return null;
   }
 
@@ -79,10 +79,26 @@ function inferCity(address?: string | null, url?: string | null): string | null 
 }
 
 function isSanFrancisco(city: string | null, address: string, url: string) {
-  if (city && !/\b(?:san francisco|sf)\b/i.test(city)) {
+  if (city && !isSanFranciscoCity(city)) {
     return false;
   }
 
   const haystack = `${city ?? ""} ${address} ${url}`.toLowerCase();
-  return haystack.includes("san francisco") || haystack.includes("941");
+  if (haystack.includes("south san francisco")) return false;
+  return /\bsan francisco\b/.test(haystack) || /\b941[0-9]{2}\b/.test(haystack);
+}
+
+function isSanFranciscoCity(city: string) {
+  return /^(?:san francisco|sf)(?:\b|,)/i.test(cleanText(city));
+}
+
+function isCommercialListing(title: string) {
+  const text = title.toLowerCase();
+  return (
+    /\bcommercial\b/.test(text) ||
+    /\bretail space\b/.test(text) ||
+    /\boffice space\b/.test(text) ||
+    /\boffices?\s+(?:available|space)\b/.test(text) ||
+    /\bfull floor offices\b/.test(text)
+  );
 }
