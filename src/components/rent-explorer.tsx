@@ -115,8 +115,8 @@ export function RentExplorer() {
   }, []);
 
   return (
-    <main className="min-h-[100dvh] bg-paper text-ink">
-      <header className="sticky top-0 z-20 border-b border-line bg-paper/95 backdrop-blur">
+    <main className="min-h-[100dvh] bg-paper text-ink lg:flex lg:h-[100dvh] lg:flex-col lg:overflow-hidden">
+      <header className="sticky top-0 z-20 shrink-0 border-b border-line bg-paper/95 backdrop-blur lg:static">
         <div className="mx-auto flex max-w-[1680px] flex-col gap-4 px-4 py-4 lg:px-6">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
@@ -239,8 +239,8 @@ export function RentExplorer() {
         </div>
       </header>
 
-      <section className="mx-auto grid max-w-[1680px] grid-cols-1 gap-0 lg:grid-cols-[minmax(520px,1fr)_520px]">
-        <div className={clsx("h-[calc(100dvh-176px)] min-h-[520px] lg:sticky lg:top-[153px]", mobileView === "list" && "hidden lg:block")}>
+      <section className="mx-auto grid w-full max-w-[1680px] flex-1 grid-cols-1 gap-0 lg:min-h-0 lg:grid-cols-[minmax(520px,1fr)_520px]">
+        <div className={clsx("h-[calc(100dvh-176px)] min-h-[520px] lg:h-full lg:min-h-0", mobileView === "list" && "hidden lg:block")}>
           <ListingMap
             listings={filtered}
             selectedId={selected?.id ?? null}
@@ -249,8 +249,8 @@ export function RentExplorer() {
           />
         </div>
 
-        <aside className={clsx("border-l border-line bg-paper", mobileView === "map" && "hidden lg:block")}>
-          <div className="max-h-none overflow-y-auto lg:h-[calc(100dvh-153px)]">
+        <aside className={clsx("border-l border-line bg-paper lg:min-h-0 lg:overflow-hidden", mobileView === "map" && "hidden lg:block")}>
+          <div className="max-h-none overflow-y-auto lg:h-full">
             {loading ? (
               <ListingSkeleton />
             ) : filtered.length ? (
