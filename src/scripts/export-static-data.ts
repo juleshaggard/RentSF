@@ -26,7 +26,7 @@ async function main() {
     })
   ]);
 
-  const sevenDaysAgo = Date.now() - 1000 * 60 * 60 * 24 * 7;
+  const newListingCutoff = Date.now() - 1000 * 60 * 60 * 24;
   const listingPayload: ListingDTO[] = listings.map((listing) => {
     const previous = previousByKey.get(`${listing.source}:${listing.externalId}`);
     const firstSeenAt = previous?.firstSeenAt ?? listing.firstSeenAt.toISOString();
@@ -54,7 +54,7 @@ async function main() {
       firstSeenAt,
       lastSeenAt: listing.lastSeenAt.toISOString(),
       inactiveAt: listing.inactiveAt?.toISOString() ?? null,
-      isNew: new Date(firstSeenAt).getTime() >= sevenDaysAgo
+      isNew: new Date(firstSeenAt).getTime() >= newListingCutoff
     };
   });
 

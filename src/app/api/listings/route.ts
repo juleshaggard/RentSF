@@ -11,7 +11,7 @@ export async function GET() {
       orderBy: [{ firstSeenAt: "desc" }, { rent: "asc" }]
     });
 
-    const sevenDaysAgo = Date.now() - 1000 * 60 * 60 * 24 * 7;
+    const newListingCutoff = Date.now() - 1000 * 60 * 60 * 24;
     const payload: ListingDTO[] = listings.map((listing) => ({
       id: listing.id,
       source: listing.source,
@@ -35,7 +35,7 @@ export async function GET() {
       firstSeenAt: listing.firstSeenAt.toISOString(),
       lastSeenAt: listing.lastSeenAt.toISOString(),
       inactiveAt: listing.inactiveAt?.toISOString() ?? null,
-      isNew: listing.firstSeenAt.getTime() >= sevenDaysAgo
+      isNew: listing.firstSeenAt.getTime() >= newListingCutoff
     }));
 
     return NextResponse.json({ listings: payload });
