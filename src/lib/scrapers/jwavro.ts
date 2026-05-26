@@ -69,8 +69,10 @@ async function enrichJwavroListing(listing: RawListing): Promise<RawListing> {
     const html = await fetchText(listing.url);
     const $ = cheerio.load(html);
     const detailText = cleanText($.text());
+    const detailAddress = normalizeDetailAddress(cleanText($(".rental-hero-subtitle").first().text()));
     return {
       ...listing,
+      address: detailAddress ?? listing.address,
       contactEmail: extractContactEmail($, $.root(), detailText) ?? listing.contactEmail,
       contactPhone: extractPhone(detailText) ?? listing.contactPhone,
       imageUrls: unique([...(listing.imageUrls ?? []), ...extractImageUrls($, $.root(), listing.url)]),
@@ -79,4 +81,9 @@ async function enrichJwavroListing(listing: RawListing): Promise<RawListing> {
   } catch {
     return listing;
   }
+}
+
+function normalizeDetailAddress(value: string) {
+  const address = cleanText(value).replace(/,\s*California\b/i, ", CA");
+  return address.toLowerCase().includes("san francisco") ? address : null;
 }

@@ -1,6 +1,82 @@
 {
-  "generatedAt": "2026-05-26T02:19:51.619Z",
+  "generatedAt": "2026-05-26T02:42:50.401Z",
   "runs": [
+    {
+      "id": "cmpm14w540000q7qwmeyofrf6",
+      "startedAt": "2026-05-26T02:42:12.280Z",
+      "finishedAt": "2026-05-26T02:42:39.308Z",
+      "status": "success",
+      "totalFound": 109,
+      "newCount": 0,
+      "updatedCount": 12,
+      "inactiveCount": 0,
+      "sourceStats": [
+        {
+          "source": "chandler",
+          "sourceName": "Chandler Properties",
+          "fetched": 2,
+          "normalized": 1,
+          "created": 0,
+          "updated": 1,
+          "inactive": 0
+        },
+        {
+          "source": "structure",
+          "sourceName": "Structure Properties",
+          "fetched": 20,
+          "normalized": 4,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "amsi",
+          "sourceName": "AMSI",
+          "fetched": 0,
+          "normalized": 0,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "brick-timber",
+          "sourceName": "Brick + Timber",
+          "fetched": 37,
+          "normalized": 25,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "wcpm",
+          "sourceName": "WCPM",
+          "fetched": 3,
+          "normalized": 1,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "sf-bay-rental-co",
+          "sourceName": "SF Bay Rental Co.",
+          "fetched": 21,
+          "normalized": 6,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "j-wavro",
+          "sourceName": "J. Wavro Associates",
+          "fetched": 26,
+          "normalized": 11,
+          "created": 0,
+          "updated": 11,
+          "inactive": 0
+        }
+      ],
+      "errors": []
+    },
     {
       "id": "cmpm06d8w0000q7sup0h2yeqy",
       "startedAt": "2026-05-26T02:15:21.489Z",

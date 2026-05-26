@@ -15,20 +15,23 @@ export function buildInquiryEmail(listing: {
   url: string;
 }): InquiryEmail | null {
   if (!listing.contactEmail) return null;
-  const subject = `Interested in ${listing.address || listing.title}`;
+  const address = listing.address || listing.title;
+  const subject = `Viewing request for ${address}`;
   const body = [
     "Hi,",
     "",
-    `I saw this listing and would love to schedule a viewing: ${listing.title}`,
-    listing.address ? `Address: ${listing.address}` : null,
+    `I'm interested in the 1-bedroom at ${address}. It looks like it could be a good fit, and I'd love to come see it if it's still available.`,
+    "",
+    `Listing: ${listing.title}`,
+    listing.address ? `Full address: ${listing.address}` : null,
     listing.rent ? `Rent: $${listing.rent.toLocaleString()}/mo` : null,
-    `Listing: ${listing.url}`,
+    `Link: ${listing.url}`,
     "",
-    "Could you let me know the next available showing time?",
+    "Could you let me know the earliest showing time that works, and if there is anything you would like me to send over before viewing?",
     "",
-    "Thank you"
+    "Thanks!"
   ]
-    .filter(Boolean)
+    .filter((line): line is string => line !== null)
     .join("\n");
 
   const to = listing.contactEmail;

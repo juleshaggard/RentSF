@@ -135,7 +135,10 @@ describe("field extraction helpers", () => {
     });
 
     expect(mailto).toContain("mailto:leasing@example.com");
-    expect(decodeURIComponent(mailto ?? "")).toContain("Could you let me know the next available showing time?");
+    expect(decodeURIComponent(mailto ?? "")).toContain("Viewing request for 123 Page St, San Francisco, CA");
+    expect(decodeURIComponent(mailto ?? "")).toContain("Hi,\n\nI'm interested in the 1-bedroom at 123 Page St, San Francisco, CA");
+    expect(decodeURIComponent(mailto ?? "")).toContain("Full address: 123 Page St, San Francisco, CA");
+    expect(decodeURIComponent(mailto ?? "")).toContain("earliest showing time");
     expect(decodeURIComponent(mailto ?? "")).toContain("Rent: $2,995/mo");
   });
 });
