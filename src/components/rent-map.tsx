@@ -22,7 +22,7 @@ export function ListingMap({ listings, selectedId, hoveredId, onSelect }: Listin
     [listings]
   );
   const mappableKey = useMemo(
-    () => mappableListings.map((listing) => `${listing.id}:${listing.lat}:${listing.lng}:${listing.rent ?? "ask"}`).join("|"),
+    () => mappableListings.map((listing) => `${listing.id}:${listing.lat}:${listing.lng}:${listing.rent ?? "ask"}:${listing.isNew}`).join("|"),
     [mappableListings]
   );
 
@@ -157,9 +157,12 @@ function priceIcon(
   listing: ListingDTO,
   active: boolean
 ): DivIcon {
+  const label = listing.rent ? `$${compactPrice(listing.rent)}` : "Ask";
+  const ariaLabel = `${listing.isNew ? "New listing, " : ""}${label}, ${listing.title}`;
+
   return L.divIcon({
     className: "",
-    html: `<button class="price-marker" data-active="${active}" type="button">${listing.rent ? `$${compactPrice(listing.rent)}` : "Ask"}</button>`,
+    html: `<button class="price-marker" data-active="${active}" data-new="${listing.isNew}" type="button" aria-label="${escapeHtml(ariaLabel)}">${escapeHtml(label)}</button>`,
     iconAnchor: [24, 34]
   });
 }
@@ -173,4 +176,8 @@ function compactPrice(value: number) {
 
 function hasVisibleSize(element: HTMLElement | null) {
   return Boolean(element && element.clientWidth > 0 && element.clientHeight > 0);
+}
+
+function escapeHtml(value: string) {
+  return value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }

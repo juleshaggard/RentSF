@@ -51,15 +51,50 @@ a {
   font-weight: 800;
   line-height: 1;
   padding: 8px 10px;
+  position: relative;
   transform: translateY(-4px);
   transition:
     background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
     color 180ms ease,
     transform 180ms ease;
 }
 
-.price-marker[data-active="true"] {
+.price-marker[data-new="true"] {
+  border-color: oklch(58% 0.18 23 / 0.72);
   background: oklch(63% 0.18 23);
   color: oklch(99% 0.006 75);
+  box-shadow:
+    0 0 0 3px oklch(99% 0.006 75 / 0.92),
+    0 10px 26px -12px oklch(45% 0.15 23 / 0.72);
+}
+
+.price-marker[data-new="true"]::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: -3px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid oklch(99% 0.006 75);
+  border-radius: 999px;
+  background: oklch(77% 0.15 65);
+}
+
+.price-marker[data-active="true"] {
+  background: oklch(21% 0.01 260);
+  color: oklch(99% 0.006 75);
+  box-shadow:
+    0 0 0 3px oklch(99% 0.006 75 / 0.96),
+    0 12px 28px -12px oklch(20% 0.02 260 / 0.68);
   transform: translateY(-8px) scale(1.04);
+}
+
+.price-marker[data-active="true"][data-new="true"] {
+  background: oklch(63% 0.18 23);
+  box-shadow:
+    0 0 0 3px oklch(99% 0.006 75 / 0.96),
+    0 0 0 6px oklch(63% 0.18 23 / 0.28),
+    0 14px 32px -12px oklch(45% 0.15 23 / 0.74);
 }
