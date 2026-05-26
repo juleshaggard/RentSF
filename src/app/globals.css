@@ -1,0 +1,65 @@
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --background: oklch(98% 0.006 75);
+  --foreground: oklch(21% 0.01 260);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-control-attribution {
+  border-radius: 999px 0 0 0;
+  font-size: 10px;
+}
+
+.price-marker {
+  border: 1px solid oklch(20% 0.02 260 / 0.08);
+  border-radius: 999px;
+  background: oklch(99% 0.006 75);
+  color: oklch(21% 0.01 260);
+  box-shadow: 0 8px 24px -10px oklch(20% 0.02 260 / 0.52);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  padding: 8px 10px;
+  transform: translateY(-4px);
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.price-marker[data-active="true"] {
+  background: oklch(63% 0.18 23);
+  color: oklch(99% 0.006 75);
+  transform: translateY(-8px) scale(1.04);
+}

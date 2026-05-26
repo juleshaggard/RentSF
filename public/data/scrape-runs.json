@@ -1,0 +1,461 @@
+{
+  "generatedAt": "2026-05-26T02:19:51.619Z",
+  "runs": [
+    {
+      "id": "cmpm06d8w0000q7sup0h2yeqy",
+      "startedAt": "2026-05-26T02:15:21.489Z",
+      "finishedAt": "2026-05-26T02:15:34.524Z",
+      "status": "success",
+      "totalFound": 109,
+      "newCount": 0,
+      "updatedCount": 8,
+      "inactiveCount": 0,
+      "sourceStats": [
+        {
+          "source": "chandler",
+          "sourceName": "Chandler Properties",
+          "fetched": 2,
+          "normalized": 1,
+          "created": 0,
+          "updated": 1,
+          "inactive": 0
+        },
+        {
+          "source": "structure",
+          "sourceName": "Structure Properties",
+          "fetched": 20,
+          "normalized": 4,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "amsi",
+          "sourceName": "AMSI",
+          "fetched": 0,
+          "normalized": 0,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "brick-timber",
+          "sourceName": "Brick + Timber",
+          "fetched": 37,
+          "normalized": 25,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "wcpm",
+          "sourceName": "WCPM",
+          "fetched": 3,
+          "normalized": 1,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "sf-bay-rental-co",
+          "sourceName": "SF Bay Rental Co.",
+          "fetched": 21,
+          "normalized": 6,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "j-wavro",
+          "sourceName": "J. Wavro Associates",
+          "fetched": 26,
+          "normalized": 11,
+          "created": 0,
+          "updated": 7,
+          "inactive": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "cmpm034qd0000q7ahxk8z6xzx",
+      "startedAt": "2026-05-26T02:12:50.486Z",
+      "finishedAt": "2026-05-26T02:13:04.276Z",
+      "status": "success",
+      "totalFound": 109,
+      "newCount": 0,
+      "updatedCount": 12,
+      "inactiveCount": 0,
+      "sourceStats": [
+        {
+          "source": "chandler",
+          "sourceName": "Chandler Properties",
+          "fetched": 2,
+          "normalized": 1,
+          "created": 0,
+          "updated": 1,
+          "inactive": 0
+        },
+        {
+          "source": "structure",
+          "sourceName": "Structure Properties",
+          "fetched": 20,
+          "normalized": 4,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "amsi",
+          "sourceName": "AMSI",
+          "fetched": 0,
+          "normalized": 0,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "brick-timber",
+          "sourceName": "Brick + Timber",
+          "fetched": 37,
+          "normalized": 25,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "wcpm",
+          "sourceName": "WCPM",
+          "fetched": 3,
+          "normalized": 1,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "sf-bay-rental-co",
+          "sourceName": "SF Bay Rental Co.",
+          "fetched": 21,
+          "normalized": 6,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "j-wavro",
+          "sourceName": "J. Wavro Associates",
+          "fetched": 26,
+          "normalized": 11,
+          "created": 0,
+          "updated": 11,
+          "inactive": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "cmplzlmkp0000q7maft5e14iv",
+      "startedAt": "2026-05-26T01:59:13.802Z",
+      "finishedAt": "2026-05-26T01:59:26.413Z",
+      "status": "success",
+      "totalFound": 109,
+      "newCount": 0,
+      "updatedCount": 12,
+      "inactiveCount": 0,
+      "sourceStats": [
+        {
+          "source": "chandler",
+          "sourceName": "Chandler Properties",
+          "fetched": 2,
+          "normalized": 1,
+          "created": 0,
+          "updated": 1,
+          "inactive": 0
+        },
+        {
+          "source": "structure",
+          "sourceName": "Structure Properties",
+          "fetched": 20,
+          "normalized": 4,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "amsi",
+          "sourceName": "AMSI",
+          "fetched": 0,
+          "normalized": 0,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "brick-timber",
+          "sourceName": "Brick + Timber",
+          "fetched": 37,
+          "normalized": 25,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "wcpm",
+          "sourceName": "WCPM",
+          "fetched": 3,
+          "normalized": 1,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "sf-bay-rental-co",
+          "sourceName": "SF Bay Rental Co.",
+          "fetched": 21,
+          "normalized": 6,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "j-wavro",
+          "sourceName": "J. Wavro Associates",
+          "fetched": 26,
+          "normalized": 11,
+          "created": 0,
+          "updated": 11,
+          "inactive": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "cmplzcp4i0000q7jo7wjcl73j",
+      "startedAt": "2026-05-26T01:52:17.202Z",
+      "finishedAt": "2026-05-26T01:52:29.945Z",
+      "status": "success",
+      "totalFound": 109,
+      "newCount": 0,
+      "updatedCount": 17,
+      "inactiveCount": 0,
+      "sourceStats": [
+        {
+          "source": "chandler",
+          "sourceName": "Chandler Properties",
+          "fetched": 2,
+          "normalized": 1,
+          "created": 0,
+          "updated": 1,
+          "inactive": 0
+        },
+        {
+          "source": "structure",
+          "sourceName": "Structure Properties",
+          "fetched": 20,
+          "normalized": 4,
+          "created": 0,
+          "updated": 4,
+          "inactive": 0
+        },
+        {
+          "source": "amsi",
+          "sourceName": "AMSI",
+          "fetched": 0,
+          "normalized": 0,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "brick-timber",
+          "sourceName": "Brick + Timber",
+          "fetched": 37,
+          "normalized": 25,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "wcpm",
+          "sourceName": "WCPM",
+          "fetched": 3,
+          "normalized": 1,
+          "created": 0,
+          "updated": 1,
+          "inactive": 0
+        },
+        {
+          "source": "sf-bay-rental-co",
+          "sourceName": "SF Bay Rental Co.",
+          "fetched": 21,
+          "normalized": 6,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "j-wavro",
+          "sourceName": "J. Wavro Associates",
+          "fetched": 26,
+          "normalized": 11,
+          "created": 0,
+          "updated": 11,
+          "inactive": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "cmplyvzcs0000q7ond426cm5b",
+      "startedAt": "2026-05-26T01:39:17.309Z",
+      "finishedAt": "2026-05-26T01:39:23.236Z",
+      "status": "success",
+      "totalFound": 109,
+      "newCount": 0,
+      "updatedCount": 1,
+      "inactiveCount": 4,
+      "sourceStats": [
+        {
+          "source": "chandler",
+          "sourceName": "Chandler Properties",
+          "fetched": 2,
+          "normalized": 1,
+          "created": 0,
+          "updated": 1,
+          "inactive": 0
+        },
+        {
+          "source": "structure",
+          "sourceName": "Structure Properties",
+          "fetched": 20,
+          "normalized": 4,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "amsi",
+          "sourceName": "AMSI",
+          "fetched": 0,
+          "normalized": 0,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "brick-timber",
+          "sourceName": "Brick + Timber",
+          "fetched": 37,
+          "normalized": 25,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "wcpm",
+          "sourceName": "WCPM",
+          "fetched": 3,
+          "normalized": 1,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "sf-bay-rental-co",
+          "sourceName": "SF Bay Rental Co.",
+          "fetched": 21,
+          "normalized": 6,
+          "created": 0,
+          "updated": 0,
+          "inactive": 4
+        },
+        {
+          "source": "j-wavro",
+          "sourceName": "J. Wavro Associates",
+          "fetched": 26,
+          "normalized": 11,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "cmplyst0s0000q75c3escfuvw",
+      "startedAt": "2026-05-26T01:36:49.132Z",
+      "finishedAt": "2026-05-26T01:37:15.861Z",
+      "status": "success",
+      "totalFound": 109,
+      "newCount": 52,
+      "updatedCount": 0,
+      "inactiveCount": 0,
+      "sourceStats": [
+        {
+          "source": "chandler",
+          "sourceName": "Chandler Properties",
+          "fetched": 2,
+          "normalized": 1,
+          "created": 1,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "structure",
+          "sourceName": "Structure Properties",
+          "fetched": 20,
+          "normalized": 4,
+          "created": 4,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "amsi",
+          "sourceName": "AMSI",
+          "fetched": 0,
+          "normalized": 0,
+          "created": 0,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "brick-timber",
+          "sourceName": "Brick + Timber",
+          "fetched": 37,
+          "normalized": 25,
+          "created": 25,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "wcpm",
+          "sourceName": "WCPM",
+          "fetched": 3,
+          "normalized": 1,
+          "created": 1,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "sf-bay-rental-co",
+          "sourceName": "SF Bay Rental Co.",
+          "fetched": 21,
+          "normalized": 10,
+          "created": 10,
+          "updated": 0,
+          "inactive": 0
+        },
+        {
+          "source": "j-wavro",
+          "sourceName": "J. Wavro Associates",
+          "fetched": 26,
+          "normalized": 11,
+          "created": 11,
+          "updated": 0,
+          "inactive": 0
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

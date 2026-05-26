@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Listing {
+  id           String    @id @default(cuid())
+  source       String
+  externalId   String
+  title        String
+  address      String
+  neighborhood String?
+  rent         Int?
+  bedrooms     Float?
+  bathrooms    Float?
+  sqft         Int?
+  availableDate DateTime?
+  url          String
+  applyUrl     String?
+  contactEmail String?
+  contactPhone String?
+  imageUrls    Json      @default("[]")
+  lat          Float?
+  lng          Float?
+  description  String?
+  contentHash  String
+  firstSeenAt  DateTime  @default(now())
+  lastSeenAt   DateTime  @default(now())
+  inactiveAt   DateTime?
+  notifiedAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([source, externalId])
+  @@index([inactiveAt, firstSeenAt])
+  @@index([source])
+}
+
+model ScrapeRun {
+  id            String    @id @default(cuid())
+  startedAt     DateTime  @default(now())
+  finishedAt    DateTime?
+  status        String
+  totalFound    Int       @default(0)
+  newCount      Int       @default(0)
+  updatedCount  Int       @default(0)
+  inactiveCount Int       @default(0)
+  sourceStats   Json?
+  errors        Json?
+  createdAt     DateTime  @default(now())
+}
+
+model GeocodeCache {
+  address           String   @id
+  normalizedAddress String?
+  lat               Float
+  lng               Float
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

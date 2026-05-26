@@ -1,0 +1,49 @@
+{
+  "name": "rentsf",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "prisma generate && next build --turbopack",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build:pages": "node scripts/build-pages.mjs",
+    "db:generate": "prisma generate",
+    "db:migrate": "node scripts/ensure-sqlite-db.mjs && prisma migrate deploy",
+    "scrape:once": "tsx src/scripts/scrape-once.ts",
+    "export:static-data": "tsx src/scripts/export-static-data.ts",
+    "worker": "tsx src/scripts/worker.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.8.2",
+    "cheerio": "^1.0.0",
+    "clsx": "^2.1.1",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.511.0",
+    "next": "^15.3.2",
+    "node-cron": "^3.0.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "resend": "^4.5.1",
+    "zod": "^3.25.28"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@types/leaflet": "^1.9.17",
+    "@types/node": "^22.15.21",
+    "@types/node-cron": "^3.0.11",
+    "@types/react": "^19.1.5",
+    "@types/react-dom": "^19.1.5",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.27.0",
+    "eslint-config-next": "^15.3.2",
+    "postcss": "^8.5.3",
+    "prisma": "^6.8.2",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4"
+  }
+}

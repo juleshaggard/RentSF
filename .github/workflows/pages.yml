@@ -1,0 +1,84 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      DATABASE_URL: file:./pages.db
+      ALERT_RECIPIENT: hello@haggard.design
+      NOMINATIM_USER_AGENT: RentSF GitHub Pages scraper (${{ github.repository }})
+      NOMINATIM_EMAIL: hello@haggard.design
+      PUBLIC_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare database
+        run: |
+          npm run db:generate
+          npm run db:migrate
+
+      - name: Fetch previous listing snapshot
+        run: |
+          mkdir -p public/data
+          curl -fsSL "${PUBLIC_BASE_URL}/data/listings.json" -o public/data/previous-listings.json || true
+
+      - name: Scrape listings
+        run: npm run scrape:once -- --no-notify
+
+      - name: Export static data
+        env:
+          PREVIOUS_LISTINGS_PATH: public/data/previous-listings.json
+        run: npm run export:static-data
+
+      - name: Test
+        run: |
+          npm test
+          npm run typecheck
+          npm run lint
+
+      - name: Build static site
+        env:
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+        run: npm run build:pages
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
