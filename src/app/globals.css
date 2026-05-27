@@ -83,8 +83,7 @@ a {
 }
 
 .price-marker[data-active="true"] {
-  background: oklch(21% 0.01 260);
-  color: oklch(99% 0.006 75);
+  border-color: oklch(21% 0.01 260 / 0.28);
   box-shadow:
     0 0 0 3px oklch(99% 0.006 75 / 0.96),
     0 12px 28px -12px oklch(20% 0.02 260 / 0.68);
