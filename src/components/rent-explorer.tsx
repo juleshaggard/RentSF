@@ -32,6 +32,7 @@ type BedroomFilter = "any" | "studio" | "1" | "2" | "3plus" | "unknown";
 
 const STATIC_EXPORT = process.env.NEXT_PUBLIC_STATIC_EXPORT === "1";
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const NEW_LISTING_WINDOW_MS = 1000 * 60 * 60 * 24;
 
 export function RentExplorer() {
   const [listings, setListings] = useState<ListingDTO[]>([]);
@@ -41,6 +42,7 @@ export function RentExplorer() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [now, setNow] = useState(() => Date.now());
   const [query, setQuery] = useState("");
   const [maxRent, setMaxRent] = useState("");
   const [bedroomFilter, setBedroomFilter] = useState<BedroomFilter>("any");
@@ -51,6 +53,11 @@ export function RentExplorer() {
 
   useEffect(() => {
     void loadData();
+  }, []);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => setNow(Date.now()), 60000);
+    return () => window.clearInterval(interval);
   }, []);
 
   async function loadData() {
@@ -74,10 +81,19 @@ export function RentExplorer() {
     }
   }
 
+  const currentListings = useMemo(
+    () =>
+      listings.map((listing) => ({
+        ...listing,
+        isNew: isListingNew(listing.firstSeenAt, now)
+      })),
+    [listings, now]
+  );
+
   const filtered = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     const rentCap = maxRent ? Number(maxRent) : null;
-    const next = listings.filter((listing) => {
+    const next = currentListings.filter((listing) => {
       const matchesQuery =
         !normalizedQuery ||
         [listing.title, listing.address, listing.neighborhood, listing.source]
@@ -100,10 +116,10 @@ export function RentExplorer() {
     });
 
     return next;
-  }, [animalsOnly, bedroomFilter, catsOnly, listings, maxRent, query, sort]);
+  }, [animalsOnly, bedroomFilter, catsOnly, currentListings, maxRent, query, sort]);
 
   const selected = filtered.find((listing) => listing.id === selectedId) ?? filtered[0] ?? null;
-  const detailListing = listings.find((listing) => listing.id === detailId) ?? null;
+  const detailListing = currentListings.find((listing) => listing.id === detailId) ?? null;
   const latestRun = runs[0];
   const pricedListings = filtered.filter((listing) => listing.rent);
   const averageRent = pricedListings.length
@@ -645,6 +661,11 @@ function formatRelative(value: string) {
   const hours = Math.round(minutes / 60);
   if (hours < 24) return `${hours}h ago`;
   return `${Math.round(hours / 24)}d ago`;
+}
+
+function isListingNew(firstSeenAt: string, now: number) {
+  const firstSeen = new Date(firstSeenAt).getTime();
+  return Number.isFinite(firstSeen) && now - firstSeen <= NEW_LISTING_WINDOW_MS;
 }
 
 function friendlyError(message?: string) {
